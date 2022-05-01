@@ -70,3 +70,27 @@ For the most comprehensive overview of R package development, RStudio provides a
    * Adding data
 10. Check package (`devtools::check()`)
 11. Repeat step 10 until there are no errors or warnings
+
+### An Example Contribution
+
+At the beginning of summer 2020 I [briefly wrote](https://eoduniyi.github.io/hyperSpec.gsoc2020/) about *what* types of contributions one can make. Basically, there are **coding contributions** (CCs) and **non-coding contributions** (NCCs). The contribution I'm going to be making is a a CC. In particular, I need to fix the unit test associated with the `hypSpc.dplyr` package (interface between `hyperSpec` and `dplyr`). This is issue [<s>#48</s>](https://github.com/r-hyperspec/hySpc.dplyr/issues/48), [#51](https://github.com/r-hyperspec/hySpc.dplyr/issues/51) and [#52](https://github.com/r-hyperspec/hySpc.dplyr/issues/52). These issues have mostly arisen due to changes in the `dplyr` package. At any rate, this contribution like all other contributions will look like the following steps:
+
+1. Look at the issue request
+2. Ask questions if necessary
+3. Create a new branch
+4. Start a draft PR
+5. Solve issue
+6. Create real PR
+7. Ask for review
+8. Make necessary changes
+9. Merge changes into branch target
+
+#### Issue 51
+
+Again, the issue here is that `filter(.testdata, spc > 100)` fails because since [`dplyr` 1.0.8](https://dplyr.tidyverse.org/news/index.html) `filter()` stops accepting matrices. This is a problem because `hyperSpec` objects are defined by their special data spectra column `$spc` (which is actually a matrix 🤪 ).
+
+The solution to this has already been solved with the `hyperSpec` functions `all_wl()` and `any_wl()`, which are analog to `if_any()` and `if_all()`. One of the two functions is required to `filter` the spectra as they remove the row ambiguity. And thus, the actual change that was requested of me was to disable skipping test in **filter.R**. This resulted in me realizing that there was an identical test that should be removed. In fact, because that is all I had to do was fix a unit test, I created a PR for issue #52, then merged the changes made in the PR for issue #51 into it.
+
+#### Issue 52
+
+The issue here is that there are skipped tests in the other files within the package (i.e., **transmute.R**, **slice.R**). For **transmute.R** I also need to fix the poorly written tests. For both **transmute.R** and **slice.R**, I need to implement grouping and a test for grouping.
